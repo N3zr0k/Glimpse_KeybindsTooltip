@@ -1,7 +1,7 @@
 local ADDON_NAME = ...
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
-local L = Keybinds.L
+local KT = Glimpse:GetModule("KeybindsTooltip")
+local L = KT.L
 
 -- Die Zeilen im Tooltip. Das Anhängen, die Trennlinie, das Symbol links und der Schutz vor
 -- Secret-Werten übernimmt Glimpse (RegisterTooltipLine), hier wird nur festgelegt, was drinsteht:
@@ -43,7 +43,7 @@ end
 
 --- Liefert die Tooltip-Zeilen für eine Spell-, Item- oder Makro-ID, oder nil.
 -- id fehlt, wenn sie nicht vorhanden oder geschützt war. Dann gibt es nichts anzuzeigen.
-function Keybinds:BuildLines(kind, id)
+function KT:BuildLines(kind, id)
     local entry = id and self.bindings[kind][id]
     if not entry then return nil end
 
@@ -69,7 +69,7 @@ function Keybinds:BuildLines(kind, id)
     return rows
 end
 
-function Keybinds:RegisterTooltips()
+function KT:RegisterTooltips()
     for typeName, kind in pairs(TYPES) do
         local dataType = Enum.TooltipDataType and Enum.TooltipDataType[typeName]
 
@@ -89,7 +89,7 @@ end
 local TOOLTIPS = { "GameTooltip", "ItemRefTooltip", "ShoppingTooltip1", "ShoppingTooltip2" }
 
 -- Baut sichtbare Tooltips neu auf, z. B. nachdem eine Option geändert wurde
-function Keybinds:RefreshTooltips()
+function KT:RefreshTooltips()
     for _, name in ipairs(TOOLTIPS) do
         local tooltip = _G[name]
 

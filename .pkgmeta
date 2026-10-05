@@ -1,4 +1,4 @@
-package-as: Glimpse_Keybinds
+package-as: Glimpse_KeybindsTooltip
 
 manual-changelog:
   filename: CHANGELOG.md

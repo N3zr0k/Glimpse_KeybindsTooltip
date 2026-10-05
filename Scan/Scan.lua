@@ -1,6 +1,6 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
-local U = Keybinds.util
+local KT = Glimpse:GetModule("KeybindsTooltip")
+local U = KT.util
 
 local Clean, AddUnique, GetEntry = U.Clean, U.AddUnique, U.GetEntry
 local AddKeys, FormatClickCast = U.AddKeys, U.FormatClickCast
@@ -93,7 +93,7 @@ local function ScanClickCasting()
     end
 end
 
-function Keybinds:RefreshBindings()
+function KT:RefreshBindings()
     for _, byID in pairs(self.bindings) do wipe(byID) end
 
     -- Ein Fehler beim Einlesen soll weder Tooltips noch Events stören

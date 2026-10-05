@@ -1,7 +1,7 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
-local L = Keybinds.L
-local U = Keybinds.util
+local KT = Glimpse:GetModule("KeybindsTooltip")
+local L = KT.L
+local U = KT.util
 
 -- /gli keybinds refresh | list
 
@@ -11,7 +11,7 @@ local function PrintBindings()
     Glimpse:Print(L["Current bonus bar offset:"] .. " " .. U.CurrentBonusOffset())
 
     local count = 0
-    for kind, byID in pairs(Keybinds.bindings) do
+    for kind, byID in pairs(KT.bindings) do
         for id, entry in pairs(byID) do
             count = count + 1
 
@@ -32,7 +32,7 @@ local function OnCommand(_, args)
     args = strlower(args or "")
 
     if args == "refresh" then
-        Keybinds:RefreshBindings()
+        KT:RefreshBindings()
         Glimpse:Print(L["Bindings refreshed."])
     elseif args == "list" then
         PrintBindings()

@@ -9,12 +9,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 --             Scan/      = Belegungen einlesen und formatieren
 --             Tooltip/   = Tooltip-Zeilen
 --             Commands/  = Slash-Befehl
-local Keybinds = Glimpse:NewModule("Keybinds", nil, "AceEvent-3.0") -- AceEvent für die Events unten
-Keybinds.L = L
+local KT = Glimpse:NewModule("KeybindsTooltip", nil, "AceEvent-3.0") -- AceEvent für die Events unten
+KT.L = L
 
 -- Gefundene Belegungen, getrennt nach Art, damit sich Spell-, Item- und Makro-IDs nicht
 -- überschreiben: bindings[art][id] = { keyboard = {}, mouse = {}, clickCast = {} }
-Keybinds.bindings = { spell = {}, item = {}, macro = {} }
+KT.bindings = { spell = {}, item = {}, macro = {} }
 
 local defaults = {
     profile = {
@@ -47,15 +47,15 @@ local EVENTS = {
     "CLICKBINDINGS_SET_HIGHLIGHTS_SHOWN",
 }
 
-function Keybinds:OnInitialize()
+function KT:OnInitialize()
     -- eigener Namespace in der Glimpse-DB, wandert mit dem Profil
-    self.db = Glimpse.db:RegisterNamespace("Keybinds", defaults)
+    self.db = Glimpse.db:RegisterNamespace("KeybindsTooltip", defaults)
 
     -- BuildOptions steht in Core/Options.lua
     Glimpse:RegisterAddonOptions(ADDON_NAME, self:BuildOptions())
 end
 
-function Keybinds:OnEnable()
+function KT:OnEnable()
     for _, event in ipairs(EVENTS) do
         -- Ein Event, das der Client nicht kennt, wirft beim Registrieren einen Fehler.
         -- Das soll nicht den ganzen Start abbrechen.
@@ -70,12 +70,12 @@ function Keybinds:OnEnable()
 end
 
 -- Beim Drücken oder Loslassen sichtbare Tooltips neu aufbauen, aber nur wenn Tasten verlangt sind
-function Keybinds:OnModifierChanged()
+function KT:OnModifierChanged()
     if Glimpse:ModifiersRequired(self.db.profile) then self:RefreshTooltips() end
 end
 
 -- Mehrere Events kurz hintereinander (z. B. beim Formwechsel) sollen nur einen Scan auslösen
-function Keybinds:ScheduleRefresh()
+function KT:ScheduleRefresh()
     if self.refreshPending then return end
     self.refreshPending = true
 
@@ -87,7 +87,7 @@ end
 
 -- Beim Speichern eines Klick-Zauber-Profils gibt es kein Event, deshalb hängen wir uns an die
 -- Blizzard-Funktion. Es wird nur einmal gehookt, auch wenn das Modul mehrfach aktiviert wird.
-function Keybinds:InstallClickBindingHook()
+function KT:InstallClickBindingHook()
     if self.clickHookInstalled then return end
     if not (C_ClickBindings and C_ClickBindings.SetProfileByInfo) then return end
 

@@ -1,10 +1,10 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
+local KT = Glimpse:GetModule("KeybindsTooltip")
 
 -- Kleine Helfer, die Format.lua, Slots.lua und Scan.lua gemeinsam nutzen. Sie hängen an
--- Keybinds.util, damit die Dateien sich nicht über Globals unterhalten müssen.
+-- KT.util, damit die Dateien sich nicht über Globals unterhalten müssen.
 local U = {}
-Keybinds.util = U
+KT.util = U
 
 -- Rückgabewerte der Blizzard-Funktionen können als secret geschützt sein. Die dürfen wir weder
 -- vergleichen noch umwandeln, also lassen wir sie weg (nil).
@@ -26,7 +26,7 @@ local function GetEntry(kind, id)
     id = tonumber(id)
     if not id then return nil end
 
-    local byID = Keybinds.bindings[kind]
+    local byID = KT.bindings[kind]
     local entry = byID[id]
     if not entry then
         entry = { keyboard = {}, mouse = {}, clickCast = {} }

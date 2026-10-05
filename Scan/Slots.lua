@@ -1,6 +1,6 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
-local U = Keybinds.util
+local KT = Glimpse:GetModule("KeybindsTooltip")
+local U = KT.util
 
 -- Je nach Clientstand liegt die Funktion global oder in C_Item
 local GetItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant) or GetItemInfoInstant

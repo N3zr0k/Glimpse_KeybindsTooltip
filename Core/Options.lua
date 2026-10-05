@@ -1,6 +1,6 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
-local L = Keybinds.L
+local KT = Glimpse:GetModule("KeybindsTooltip")
+local L = KT.L
 
 -- { Option, Name, Beschreibung } der Checkboxen im Optionen-Panel
 local TOGGLES = {
@@ -9,7 +9,7 @@ local TOGGLES = {
     { "showClickCast", "Show click-cast bindings", "Show Blizzard click-casting bindings in tooltips." },
 }
 
-function Keybinds:BuildOptions()
+function KT:BuildOptions()
     local args = {}
 
     for order, toggle in ipairs(TOGGLES) do

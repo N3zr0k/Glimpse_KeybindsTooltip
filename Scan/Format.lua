@@ -1,7 +1,7 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
-local Keybinds = Glimpse:GetModule("Keybinds")
-local U = Keybinds.util
-local L = Keybinds.L
+local KT = Glimpse:GetModule("KeybindsTooltip")
+local U = KT.util
+local L = KT.L
 
 local Clean, AddUnique, GetEntry = U.Clean, U.AddUnique, U.GetEntry
 

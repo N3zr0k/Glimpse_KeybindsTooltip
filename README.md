@@ -1,6 +1,6 @@
-# Glimpse: Keybinds
+# Glimpse: KeybindsTooltip
 
-<p align="center"><img src="docs/icon.png" alt="Keybinds icon" width="160"></p>
+<p align="center"><img src="docs/icon.png" alt="KeybindsTooltip icon" width="160"></p>
 
 Shows the keyboard, mouse and click-cast bindings of spells, items and macros in their tooltips.
 An extension for [Glimpse](https://github.com/N3zr0k/Glimpse) (requires Glimpse 0.1.0 or newer).
@@ -13,7 +13,7 @@ An extension for [Glimpse](https://github.com/N3zr0k/Glimpse) (requires Glimpse 
 ## Installation
 
 Install [Glimpse](https://github.com/N3zr0k/Glimpse/releases) first, then unpack this addon next to it into the
-`Interface/AddOns` folder. The folder must be called `Glimpse_Keybinds`.
+`Interface/AddOns` folder. The folder must be called `Glimpse_KeybindsTooltip`.
 
 ## Development
 
