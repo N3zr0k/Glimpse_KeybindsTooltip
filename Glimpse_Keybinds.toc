@@ -11,7 +11,7 @@
 ## X-Glimpse-MinVersion: 0.1.0
 ## Dependencies: Glimpse
 ## Category: Tooltip
-## IconTexture: Interface\AddOns\Glimpse_Keybinds\Media\Keyboard
+## IconTexture: Interface\AddOns\Glimpse_Keybinds\Media\Icon
 
 # Main XML Loader
 Glimpse_Keybinds.xml

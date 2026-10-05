@@ -8,3 +8,4 @@
 - Options to show each kind individually and to require Shift, Ctrl and/or Alt
 - `/gli keybinds refresh|list`
 - Localization: enUS, deDE, frFR
+- Addon icon (`Media/Icon.tga`) shown in the addon list
