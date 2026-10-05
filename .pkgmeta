@@ -1,0 +1,13 @@
+package-as: Glimpse_Keybinds
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+ignore:
+  - tools
+  - .github
+  - .luacheckrc
+  - .gitattributes
+  - .gitignore
+  - README.md
