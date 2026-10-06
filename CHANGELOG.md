@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.2.2] - 2026-10-06 (beta.2)
 
 ### Changed
 - Requires Glimpse 0.2.2: the options page shows the shared "Credits" section (author from the TOC)
