@@ -8,7 +8,7 @@
 ## X-Website: https://github.com/N3zr0k/Glimpse_KeybindsTooltip
 ## X-Repo: https://github.com/N3zr0k/Glimpse_KeybindsTooltip
 
-## X-Glimpse-MinVersion: 0.1.0
+## X-Glimpse-MinVersion: 0.2.0
 ## Dependencies: Glimpse
 ## Category: Tooltip
 ## IconTexture: Interface\AddOns\Glimpse_KeybindsTooltip\Media\Icon
