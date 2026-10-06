@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Changed
-- Requires Glimpse 0.2.0: the options page shows the shared "Credits" section (author from the TOC)
+- Requires Glimpse 0.2.2: the options page shows the shared "Credits" section (author from the TOC)
 - Removed the leftover files of the old name (`Glimpse_Keybinds.toc`, `Glimpse_Keybinds.xml`, `Core/Keybinds.lua`)
 
 ## [0.1.0] - 2026-10-05
