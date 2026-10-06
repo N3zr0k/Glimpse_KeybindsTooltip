@@ -3,7 +3,7 @@
 <p align="center"><img src="docs/icon.png" alt="KeybindsTooltip icon" width="160"></p>
 
 Shows the keyboard, mouse and click-cast bindings of spells, items and macros in their tooltips.
-An extension for [Glimpse](https://github.com/N3zr0k/Glimpse) (requires Glimpse 0.1.0 or newer).
+An extension for [Glimpse](https://github.com/N3zr0k/Glimpse) (requires Glimpse 0.2.0 or newer).
 
 * Scans all action bars including stance, bonus, override and vehicle bars, macros and Blizzard click-casting
 * Keyboard, mouse and click-cast bindings are shown as separate rows with an icon and can be switched off individually
