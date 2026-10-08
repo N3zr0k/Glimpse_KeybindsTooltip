@@ -9,7 +9,7 @@ local Clean, AddUnique, GetEntry = U.Clean, U.AddUnique, U.GetEntry
 -- Modifier und Tasten formatieren
 -- ---------------------------------------------------------------------------
 
--- Schreibweisen, die Blizzard liefert (C-S-F1, CTRL-SHIFT-F1, META-F1 ...), auf einen Namen bringen
+-- Blizzard-Schreibweisen (C-S-F1, CTRL-SHIFT-F1, META-F1 ...) normalisieren
 local MODIFIERS = {
     C = "CTRL", CTRL = "CTRL", CONTROL = "CTRL",
     S = "SHIFT", SHIFT = "SHIFT",
@@ -24,7 +24,7 @@ local function NormalizeModifier(name)
     return name and MODIFIERS[strupper(name)]
 end
 
--- set ist { CTRL = true, ... }, zurück kommt die sortierte Liste
+-- { CTRL = true, ... } -> sortierte Liste
 local function OrderModifiers(set)
     local ordered = {}
     for _, name in ipairs(MODIFIER_ORDER) do
@@ -34,7 +34,6 @@ local function OrderModifiers(set)
 end
 
 -- "CTRL-ALT-BUTTON4" -> { "CTRL", "ALT" }, "BUTTON4"
--- Modifier werden von vorn abgeschält, solange sie einer bekannten Schreibweise entsprechen.
 local function SplitKey(key)
     local set, base = {}, key
 
@@ -58,8 +57,7 @@ end
 local function FormatKeyboard(key)
     local modifiers, base = SplitKey(key)
 
-    -- Die Taste selbst (F1, SPACE ...) übersetzt Blizzard. Die Modifier-Namen setzen wir selbst
-    -- zusammen, weil das dritte Argument von GetBindingText je nach Client anders wirkt.
+    -- Nur die Taste übersetzen lassen, das 3. Argument von GetBindingText wirkt je nach Client anders
     local text = base
     if GetBindingText then
         local localized = GetBindingText(base, "KEY_", false)
@@ -69,7 +67,7 @@ local function FormatKeyboard(key)
     return Join(modifiers, text)
 end
 
--- Locale-Keys der Maustasten, einmal für Tastenbelegungen und einmal für Klick-Zauber
+-- Locale-Keys der Maustasten, für Tastenbelegungen und Klick-Zauber
 local MOUSE_TEXT = {
     BUTTON1 = "Left Click", BUTTON2 = "Right Click", BUTTON3 = "Middle Click",
     BUTTON4 = "Mouse 4", BUTTON5 = "Mouse 5", BUTTON6 = "Mouse 6",
@@ -133,7 +131,7 @@ local function AddKey(entry, key)
     end
 end
 
--- Trägt beide Tasten eines Befehls für die ID ein. Ohne Taste wird nichts angelegt.
+-- Ohne Taste wird kein Eintrag angelegt
 local function AddKeys(kind, id, key1, key2)
     key1, key2 = Clean(key1), Clean(key2)
     if not id or (not key1 and not key2) then return end

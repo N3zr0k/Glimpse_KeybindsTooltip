@@ -1,14 +1,27 @@
+# Ein Addon-Ordner im Repo (Glimpse_KeybindsTooltip/), alles andere liegt daneben. Der Packager baut im Ordner Glimpse_KeybindsTooltip, schiebt den
+# Inhalt des Addon-Ordners eine Ebene hoch; was außen liegt, bleibt über "ignore" draußen.
 package-as: Glimpse_KeybindsTooltip
+
+move-folders:
+  Glimpse_KeybindsTooltip/Glimpse_KeybindsTooltip: Glimpse_KeybindsTooltip
 
 manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown
 
+# Beziehungen auf CurseForge (Kurznamen der Projekte); externe Addons werden nicht gemeldet
+required-dependencies:
+  - glimpse
+
 ignore:
-  - docs
+  - tests
   - tools
+  - docs
   - .github
   - .luacheckrc
   - .gitattributes
   - .gitignore
   - README.md
+  - DEVELOPER.md
+  - CHANGELOG.md
+  - LICENSE

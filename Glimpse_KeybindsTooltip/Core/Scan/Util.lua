@@ -1,13 +1,11 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 
--- Kleine Helfer, die Format.lua, Slots.lua und Scan.lua gemeinsam nutzen. Sie hängen an
--- KT.util, damit die Dateien sich nicht über Globals unterhalten müssen.
+-- Gemeinsame Helfer für Scan/, über KT.util statt Globals
 local U = {}
 KT.util = U
 
--- Rückgabewerte der Blizzard-Funktionen können als secret geschützt sein. Die dürfen wir weder
--- vergleichen noch umwandeln, also lassen wir sie weg (nil).
+-- Secret-Werte -> nil, sie dürfen weder verglichen noch umgewandelt werden
 local function Clean(value)
     if value ~= nil and Glimpse:IsSecret(value) then return nil end
     return value

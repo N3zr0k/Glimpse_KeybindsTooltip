@@ -7,10 +7,10 @@
     <Include file="Core\Core.xml"/>
 
     <!-- 3. Belegungen einlesen -->
-    <Include file="Scan\Scan.xml"/>
+    <Include file="Core\Scan\Scan.xml"/>
 
     <!-- 4. Tooltip-Anzeige -->
-    <Include file="Tooltip\Tooltip.xml"/>
+    <Include file="Core\Tooltip\Tooltip.xml"/>
 
     <!-- 5. Slash-Befehl -->
     <Include file="Commands\Commands.xml"/>

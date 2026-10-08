@@ -5,7 +5,6 @@ local U = KT.util
 
 -- /gli keybinds refresh | list
 
--- Für /gli keybinds list
 local function PrintBindings()
     Glimpse:Print(L["Current action bar page:"] .. " " .. U.CurrentPage())
     Glimpse:Print(L["Current bonus bar offset:"] .. " " .. U.CurrentBonusOffset())

@@ -1,17 +1,18 @@
 # Changelog
 
-## [0.2.2] - 2026-10-06
+## [0.2.4] - 2026-10-08
 
 ### Changed
-- Requires Glimpse 0.2.2: the options page shows the shared "Credits" section (author from the TOC)
-- Removed the leftover files of the old name (`Glimpse_Keybinds.toc`, `Glimpse_Keybinds.xml`, `Core/Keybinds.lua`)
+- WoW Forever only (interface 16001)
+
+## [0.2.2] - 2026-10-06
+
+### Added
+- Credits tab in the options (requires Glimpse 0.2.2)
 
 ## [0.1.0] - 2026-10-05
 
 ### Added
-- Keyboard, mouse and click-cast bindings in spell, item and macro tooltips
-- Scan of all action bars, stance and override bars, macros and Blizzard click-casting
-- Options to show each kind individually and to require Shift, Ctrl and/or Alt
+- First release: keyboard, mouse and click-cast bindings in spell, item and macro tooltips
+- Each kind can be switched off, optional Shift/Ctrl/Alt requirement
 - `/gli keybinds refresh|list`
-- Localization: enUS, deDE, frFR
-- Addon icon (`Media/Icon.tga`) shown in the addon list

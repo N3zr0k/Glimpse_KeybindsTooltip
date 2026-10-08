@@ -24,7 +24,6 @@ local function ScanActionBars()
         if slot then
             local key1, key2 = GetBindingKey(command)
 
-            -- Art und ID des Slots nur einmal abfragen
             local actionType, actionID
             if GetActionInfo then actionType, actionID = GetActionInfo(slot) end
             actionType, actionID = Clean(actionType), Clean(actionID)
@@ -32,8 +31,7 @@ local function ScanActionBars()
             AddKeys("spell", SpellFromSlot(slot, actionType, actionID), key1, key2)
             AddKeys("item", ItemFromSlot(actionType, actionID), key1, key2)
 
-            -- Reine Makros (z. B. nur /sit) haben weder Spell noch Item. Die Belegung bleibt
-            -- deshalb unter der Makro-ID, damit der Makro-Tooltip sie zeigen kann.
+            -- Für reine Makros (z. B. nur /sit) ohne Spell oder Item
             if actionType == "macro" then
                 AddKeys("macro", actionID, key1, key2)
             end
@@ -41,8 +39,7 @@ local function ScanActionBars()
     end
 end
 
--- Gestaltenleiste (Haltungen, Auren, Formen): kein Actionbar-Slot, der Zauber kommt von
--- GetShapeshiftFormInfo
+-- Gestaltenleiste hat keine Actionbar-Slots, Zauber kommt von GetShapeshiftFormInfo
 local function ScanStanceBar()
     if not (GetNumShapeshiftForms and GetShapeshiftFormInfo and GetBindingKey) then return end
 
@@ -53,13 +50,12 @@ local function ScanStanceBar()
     end
 end
 
--- Makros, die direkt auf eine Taste gelegt sind (Tastenbelegung "MACRO <Name>")
+-- Direkt belegte Makros ("MACRO <Name>")
 local function ScanMacros()
     if not (GetNumMacros and GetMacroInfo and GetBindingKey) then return end
 
     local numAccount, numCharacter = GetNumMacros()
 
-    -- Account-Makros haben die IDs 1..n, Charakter-Makros beginnen nach dem Account-Block
     local ids = {}
     for id = 1, tonumber(numAccount) or 0 do tinsert(ids, id) end
     for id = 1, tonumber(numCharacter) or 0 do tinsert(ids, ACCOUNT_MACRO_COUNT + id) end
@@ -76,7 +72,7 @@ local function ScanMacros()
     end
 end
 
--- Blizzard-Klick-Zauber: nur Einträge, die einen Zauber auslösen
+-- Klick-Zauber, nur Einträge vom Typ Spell
 local function ScanClickCasting()
     if not (C_ClickBindings and C_ClickBindings.GetProfileInfo) then return end
 
@@ -96,7 +92,6 @@ end
 function KT:RefreshBindings()
     for _, byID in pairs(self.bindings) do wipe(byID) end
 
-    -- Ein Fehler beim Einlesen soll weder Tooltips noch Events stören
     local ok, err = pcall(function()
         ScanActionBars()
         ScanStanceBar()
