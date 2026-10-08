@@ -2,18 +2,17 @@ local ADDON_NAME = ...
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
--- Erweiterung für Glimpse: zeigt in Tooltips von Zaubern, Gegenständen und Makros, auf welche
--- Tasten, Maustasten oder Klick-Zauber sie gelegt sind.
+-- Zeigt in Zauber-, Item- und Makro-Tooltips die Tasten, Maustasten und Klick-Zauber.
 --
--- Aufteilung: Core/      = Modul, Events, Optionen
---             Scan/      = Belegungen einlesen und formatieren
---             Tooltip/   = Tooltip-Zeilen
---             Commands/  = Slash-Befehl
-local KT = Glimpse:NewModule("KeybindsTooltip", nil, "AceEvent-3.0") -- AceEvent für die Events unten
+-- Aufteilung: Core/          = Modul, Events, Optionen
+--             Core/Scan/     = Belegungen einlesen und formatieren
+--             Core/Tooltip/  = Tooltip-Zeilen
+--             Commands/      = Slash-Befehl
+local KT = Glimpse:NewModule("KeybindsTooltip", nil, "AceEvent-3.0")
 KT.L = L
 
--- Gefundene Belegungen, getrennt nach Art, damit sich Spell-, Item- und Makro-IDs nicht
--- überschreiben: bindings[art][id] = { keyboard = {}, mouse = {}, clickCast = {} }
+-- Nach Art getrennt, weil sich Spell-, Item- und Makro-IDs überschneiden:
+-- bindings[art][id] = { keyboard = {}, mouse = {}, clickCast = {} }
 KT.bindings = { spell = {}, item = {}, macro = {} }
 
 local defaults = {
@@ -27,8 +26,7 @@ local defaults = {
     },
 }
 
--- Events, nach denen sich eine Belegung geändert haben kann. Cooldown- und State-Events fehlen
--- bewusst: sie feuern ständig im Kampf und ändern nichts an den Belegungen.
+-- Cooldown- und State-Events fehlen bewusst, die feuern im Kampf ständig
 local EVENTS = {
     "PLAYER_ENTERING_WORLD",
     "UPDATE_BINDINGS",
@@ -48,17 +46,14 @@ local EVENTS = {
 }
 
 function KT:OnInitialize()
-    -- eigener Namespace in der Glimpse-DB, wandert mit dem Profil
     self.db = Glimpse.db:RegisterNamespace("KeybindsTooltip", defaults)
 
-    -- BuildOptions steht in Core/Options.lua
     Glimpse:RegisterAddonOptions(ADDON_NAME, self:BuildOptions())
 end
 
 function KT:OnEnable()
     for _, event in ipairs(EVENTS) do
-        -- Ein Event, das der Client nicht kennt, wirft beim Registrieren einen Fehler.
-        -- Das soll nicht den ganzen Start abbrechen.
+        -- unbekannte Events werfen je nach Client einen Fehler
         local ok = pcall(self.RegisterEvent, self, event, "ScheduleRefresh")
         if not ok then self:Debug("Event nicht verfügbar:", event) end
     end
@@ -69,12 +64,11 @@ function KT:OnEnable()
     self:ScheduleRefresh()
 end
 
--- Beim Drücken oder Loslassen sichtbare Tooltips neu aufbauen, aber nur wenn Tasten verlangt sind
 function KT:OnModifierChanged()
     if Glimpse:ModifiersRequired(self.db.profile) then self:RefreshTooltips() end
 end
 
--- Mehrere Events kurz hintereinander (z. B. beim Formwechsel) sollen nur einen Scan auslösen
+-- Event-Salven (z. B. Formwechsel) zu einem Scan zusammenfassen
 function KT:ScheduleRefresh()
     if self.refreshPending then return end
     self.refreshPending = true
@@ -85,8 +79,7 @@ function KT:ScheduleRefresh()
     end)
 end
 
--- Beim Speichern eines Klick-Zauber-Profils gibt es kein Event, deshalb hängen wir uns an die
--- Blizzard-Funktion. Es wird nur einmal gehookt, auch wenn das Modul mehrfach aktiviert wird.
+-- Kein Event beim Speichern des Klick-Zauber-Profils. Hook nur einmal, auch bei erneutem Enable.
 function KT:InstallClickBindingHook()
     if self.clickHookInstalled then return end
     if not (C_ClickBindings and C_ClickBindings.SetProfileByInfo) then return end

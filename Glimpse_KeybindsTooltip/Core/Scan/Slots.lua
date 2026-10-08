@@ -2,19 +2,16 @@ local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 local U = KT.util
 
--- Je nach Clientstand liegt die Funktion global oder in C_Item
 local GetItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant) or GetItemInfoInstant
 
 local Clean = U.Clean
 
 local ACTION_BUTTONS_PER_BAR = 12
 
--- Offset der Slots der Zusatzleisten MULTIACTIONBAR1 bis 7
--- (Bar 8 gibt es nur in neueren Clients, der Offset folgt dem Muster)
+-- Slot-Offsets MULTIACTIONBAR1 bis 8 (Bar 8 nur in neueren Clients)
 local MULTI_BAR_OFFSETS = { 60, 48, 24, 36, 144, 156, 168, 180 }
 
--- Frame-Namen der Leisten. Der Button kennt seinen Slot selbst (button.action), das ist
--- zuverlässiger als jede Rechnung, weil es auch Seiten, Edit-Mode-Leisten und neue Leisten abdeckt.
+-- button.action ist zuverlässiger als die Rechnung (Seiten, Edit-Mode, neue Leisten)
 local MULTI_BAR_FRAMES = {
     "MultiBarBottomLeft", "MultiBarBottomRight", "MultiBarRight", "MultiBarLeft",
     "MultiBar5", "MultiBar6", "MultiBar7", "MultiBar8",
@@ -24,8 +21,7 @@ local MULTI_BAR_FRAMES = {
 -- Leiste, Seite und Slot
 -- ---------------------------------------------------------------------------
 
--- Die lokalen Namen sind absichtlich nicht GetActionBarPage / GetBonusBarOffset, sonst würden
--- sie die gleichnamigen Blizzard-Funktionen überdecken.
+-- Eigene Namen, damit die Blizzard-Globals GetActionBarPage/GetBonusBarOffset nicht überdeckt werden
 local function CurrentPage()
     local page = C_ActionBar and C_ActionBar.GetActionBarPage and C_ActionBar.GetActionBarPage()
     page = page or (GetActionBarPage and GetActionBarPage())
@@ -38,8 +34,6 @@ local function CurrentBonusOffset()
     return tonumber(Clean(offset)) or 0
 end
 
--- Slot, den ein Button-Frame gerade belegt. Nil, wenn es den Frame nicht gibt oder der Wert
--- nicht brauchbar ist.
 local function SlotFromFrame(frameName)
     local button = _G[frameName]
     if not button then return nil end
@@ -52,8 +46,7 @@ local function SlotFromFrame(frameName)
     return nil
 end
 
--- Welcher Actionbar-Slot gehört zu einem Tastenbefehl (ACTIONBUTTON3, MULTIACTIONBAR2BUTTON5 ...)?
--- Erst über den Button-Frame, sonst über die Rechnung mit Seite und Offset.
+-- ACTIONBUTTON3, MULTIACTIONBAR2BUTTON5 ... -> Slot. Erst über den Frame, sonst gerechnet.
 local function SlotFromCommand(command)
     local button = strmatch(command, "^ACTIONBUTTON(%d+)$")
 
@@ -64,7 +57,7 @@ local function SlotFromCommand(command)
         local slot = SlotFromFrame("ActionButton" .. button)
         if slot then return slot end
 
-        -- Bonusleiste (Gestalt, Stealth, Fahrzeug ...) hat Vorrang vor der Seite
+        -- Bonusleiste (Gestalt, Stealth, Fahrzeug) hat Vorrang vor der Seite
         local bonus = CurrentBonusOffset()
         if bonus > 0 then
             return ACTION_BUTTONS_PER_BAR * (6 + bonus - 1) + button
@@ -131,8 +124,7 @@ local function SpellFromSlot(slot, actionType, actionID)
     return nil
 end
 
--- Bei Makros liefert GetActionInfo für Item-Makros keine brauchbare ID, deshalb wird das
--- Makro selbst nach seinem Item gefragt.
+-- Für Item-Makros liefert GetActionInfo keine brauchbare ID
 local function ItemFromSlot(actionType, actionID)
     if actionType == "item" then return tonumber(actionID) end
     if actionType == "macro" then return MacroItemID(actionID) end

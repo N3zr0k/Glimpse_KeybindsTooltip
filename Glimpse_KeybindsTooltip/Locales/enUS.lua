@@ -1,6 +1,6 @@
 local ADDON_NAME = ...
 
--- Default-Locale, der englische Text ist gleichzeitig der Key (siehe Glimpse/Locales).
+-- Default-Locale, Key = englischer Text
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true, true)
 
 -- Tooltip

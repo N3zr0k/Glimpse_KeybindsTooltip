@@ -3,8 +3,7 @@ local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 local L = KT.L
 
--- Die Zeilen im Tooltip. Das Anhängen, die Trennlinie, das Symbol links und der Schutz vor
--- Secret-Werten übernimmt Glimpse (RegisterTooltipLine), hier wird nur festgelegt, was drinsteht:
+-- Nur der Inhalt, Anhängen/Trennlinie/Icons/Secrets macht Glimpse (RegisterTooltipLine):
 --
 --   Tastenbelegung
 --   [Icon] Tastatur       CTRL-F1, Q
@@ -20,29 +19,27 @@ local COLORS = {
     clickCast = { 0.40, 1.00, 0.50 },
 }
 
--- Reihenfolge im Tooltip: Eintrag in der Bindings-Tabelle, Option, Text (Locale-Key), Icon-Datei
+-- In Anzeigereihenfolge: { Bindings-Feld, Option, Locale-Key, Icon-Datei }
 local SECTIONS = {
     { "keyboard", "showKeyboard", "Keyboard", "Keyboard" },
     { "mouse", "showMouse", "Mouse", "Mouse" },
     { "clickCast", "showClickCast", "Click-Cast", "ClickCast" },
 }
 
--- Tooltip-Typ (Name in Enum.TooltipDataType) -> Art der Belegung
+-- Enum.TooltipDataType-Name -> Bindings-Art
 local TYPES = {
     Spell = "spell",
     Item = "item",
     Macro = "macro",
 }
 
--- Die Farbe steckt als Escape im Text, damit der rechte Teil der Zeile (die Tasten) weiß bleibt.
--- Glimpse färbt beide Seiten einer Doppelzeile gleich.
+-- Farbe als Escape, weil Glimpse beide Seiten gleich färbt und die Tasten weiß bleiben sollen
 local function Colored(text, color)
     return format("|cff%02x%02x%02x%s|r",
         math.floor(color[1] * 255), math.floor(color[2] * 255), math.floor(color[3] * 255), text)
 end
 
---- Liefert die Tooltip-Zeilen für eine Spell-, Item- oder Makro-ID, oder nil.
--- id fehlt, wenn sie nicht vorhanden oder geschützt war. Dann gibt es nichts anzuzeigen.
+--- Zeilen für eine Spell-, Item- oder Makro-ID, oder nil. id ist nil, wenn secret.
 function KT:BuildLines(kind, id)
     local entry = id and self.bindings[kind][id]
     if not entry then return nil end
@@ -62,7 +59,7 @@ function KT:BuildLines(kind, id)
         end
     end
 
-    -- Ohne sichtbare Abschnitte gibt es auch keine Überschrift und keine Trennlinie
+    -- keine Abschnitte = keine Überschrift
     if #rows == 0 then return nil end
 
     tinsert(rows, 1, { Colored(L["Keybindings"], COLORS.header) })
@@ -74,9 +71,7 @@ function KT:RegisterTooltips()
         local dataType = Enum.TooltipDataType and Enum.TooltipDataType[typeName]
 
         if dataType then
-            -- Der Provider bekommt (module, data, tooltip, hidden), data ist schon bereinigt
             self:RegisterTooltipLine(dataType, function(module, data)
-                -- ohne die gewählten Zusatztasten bleibt der Tooltip unverändert
                 if not Glimpse:ModifiersHeld(module.db.profile) then return nil end
                 return module:BuildLines(kind, data.id)
             end)
@@ -88,7 +83,7 @@ end
 
 local TOOLTIPS = { "GameTooltip", "ItemRefTooltip", "ShoppingTooltip1", "ShoppingTooltip2" }
 
--- Baut sichtbare Tooltips neu auf, z. B. nachdem eine Option geändert wurde
+-- Sichtbare Tooltips neu aufbauen, z. B. nach Optionsänderung
 function KT:RefreshTooltips()
     for _, name in ipairs(TOOLTIPS) do
         local tooltip = _G[name]
