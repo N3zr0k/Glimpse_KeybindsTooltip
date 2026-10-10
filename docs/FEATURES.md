@@ -1,6 +1,6 @@
 # Glimpse: KeybindsTooltip – Funktionen
 
-Stand 0.3.2-alpha.1. Benötigt Glimpse (Core) 0.3.0 oder neuer.
+Stand 0.3.2-beta.1. Benötigt Glimpse (Core) 0.3.0 oder neuer.
 
 ## Funktionen
 

@@ -1,8 +1,6 @@
 # Changelog
 
-## [Unreleased]
-
-## [0.3.0] - 2026-10-08
+## [0.3.2] - 2026-10-10
 
 ### Changed
 - Requires Glimpse 0.3
