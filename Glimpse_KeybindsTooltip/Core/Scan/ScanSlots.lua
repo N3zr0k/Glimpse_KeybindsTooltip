@@ -1,8 +1,7 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 local U = KT.util
-
-local GetItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant) or GetItemInfoInstant
+local api = KT.api
 
 local Clean = U.Clean
 
@@ -17,25 +16,32 @@ local MULTI_BAR_FRAMES = {
     "MultiBar5", "MultiBar6", "MultiBar7", "MultiBar8",
 }
 
+-- Alle Binding-Befehle der Aktionsleisten. Nur diese werden abgefragt, nicht alle Belegungen des Spiels.
+local COMMANDS = {}
+for button = 1, ACTION_BUTTONS_PER_BAR do COMMANDS[#COMMANDS + 1] = "ACTIONBUTTON" .. button end
+for bar = 1, #MULTI_BAR_OFFSETS do
+    for button = 1, ACTION_BUTTONS_PER_BAR do
+        COMMANDS[#COMMANDS + 1] = "MULTIACTIONBAR" .. bar .. "BUTTON" .. button
+    end
+end
+COMMANDS[#COMMANDS + 1] = "EXTRAACTIONBUTTON1"
+
 -- ---------------------------------------------------------------------------
 -- Leiste, Seite und Slot
 -- ---------------------------------------------------------------------------
 
--- Eigene Namen, damit die Blizzard-Globals GetActionBarPage/GetBonusBarOffset nicht überdeckt werden
 local function CurrentPage()
-    local page = C_ActionBar and C_ActionBar.GetActionBarPage and C_ActionBar.GetActionBarPage()
-    page = page or (GetActionBarPage and GetActionBarPage())
+    local page = api.GetActionBarPage and api.GetActionBarPage()
     return tonumber(Clean(page)) or 1
 end
 
 local function CurrentBonusOffset()
-    local offset = C_ActionBar and C_ActionBar.GetBonusBarOffset and C_ActionBar.GetBonusBarOffset()
-    offset = offset or (GetBonusBarOffset and GetBonusBarOffset())
+    local offset = api.GetBonusBarOffset and api.GetBonusBarOffset()
     return tonumber(Clean(offset)) or 0
 end
 
 local function SlotFromFrame(frameName)
-    local button = _G[frameName]
+    local button = api.GetFrame(frameName)
     if not button then return nil end
 
     local slot = button.action
@@ -90,16 +96,16 @@ end
 
 local function MacroItemID(macroID)
     macroID = tonumber(macroID)
-    if not macroID or not GetMacroItem then return nil end
+    if not macroID or not api.GetMacroItem then return nil end
 
-    local itemName, itemLink = GetMacroItem(macroID)
+    local itemName, itemLink = api.GetMacroItem(macroID)
     itemName, itemLink = Clean(itemName), Clean(itemLink)
 
     local itemID = itemLink and tonumber(strmatch(itemLink, "item:(%d+)"))
     if itemID then return itemID end
 
-    if itemName and GetItemInfoInstant then
-        return tonumber((GetItemInfoInstant(itemName)))
+    if itemName and api.GetItemInfoInstant then
+        return tonumber((api.GetItemInfoInstant(itemName)))
     end
 
     return nil
@@ -107,14 +113,14 @@ end
 
 local function MacroSpellID(macroID)
     macroID = tonumber(macroID)
-    if not macroID or not GetMacroSpell then return nil end
+    if not macroID or not api.GetMacroSpell then return nil end
 
-    return tonumber(Clean((GetMacroSpell(macroID))))
+    return tonumber(Clean((api.GetMacroSpell(macroID))))
 end
 
 local function SpellFromSlot(slot, actionType, actionID)
-    if C_ActionBar and C_ActionBar.GetSpell then
-        local spellID = Clean(C_ActionBar.GetSpell(slot))
+    if api.GetActionSpell then
+        local spellID = Clean(api.GetActionSpell(slot))
         if spellID then return tonumber(spellID) end
     end
 
@@ -132,6 +138,7 @@ local function ItemFromSlot(actionType, actionID)
     return nil
 end
 
+U.COMMANDS = COMMANDS
 U.CurrentPage, U.CurrentBonusOffset = CurrentPage, CurrentBonusOffset
 U.SlotFromCommand = SlotFromCommand
 U.MacroItemID, U.MacroSpellID = MacroItemID, MacroSpellID

@@ -1,5 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <!-- KeybindsTooltip.lua legt das Modul an, die anderen Dateien erweitern es nur. -->
     <Script file="KeybindsTooltip.lua"/>
+    <Script file="KeybindsDebug.lua"/>
     <Script file="Options.lua"/>
 </Ui>

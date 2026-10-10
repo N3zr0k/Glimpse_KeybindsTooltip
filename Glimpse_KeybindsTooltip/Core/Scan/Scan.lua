@@ -1,6 +1,7 @@
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 local U = KT.util
+local api = KT.api
 
 local Clean, AddUnique, GetEntry = U.Clean, U.AddUnique, U.GetEntry
 local AddKeys, FormatClickCast = U.AddKeys, U.FormatClickCast
@@ -15,17 +16,15 @@ local ACCOUNT_MACRO_COUNT = MAX_ACCOUNT_MACROS or 120
 -- ---------------------------------------------------------------------------
 
 local function ScanActionBars()
-    if not (GetNumBindings and GetBinding and GetBindingKey) then return end
+    if not api.GetBindingKey then return end
 
-    for index = 1, tonumber(Clean(GetNumBindings())) or 0 do
-        local command = Clean((GetBinding(index)))
-        local slot = command and SlotFromCommand(command)
+    for _, command in ipairs(U.COMMANDS) do
+        local key1, key2 = api.GetBindingKey(command)
+        local slot = (Clean(key1) or Clean(key2)) and SlotFromCommand(command)
 
         if slot then
-            local key1, key2 = GetBindingKey(command)
-
             local actionType, actionID
-            if GetActionInfo then actionType, actionID = GetActionInfo(slot) end
+            if api.GetActionInfo then actionType, actionID = api.GetActionInfo(slot) end
             actionType, actionID = Clean(actionType), Clean(actionID)
 
             AddKeys("spell", SpellFromSlot(slot, actionType, actionID), key1, key2)
@@ -41,42 +40,44 @@ end
 
 -- Gestaltenleiste hat keine Actionbar-Slots, Zauber kommt von GetShapeshiftFormInfo
 local function ScanStanceBar()
-    if not (GetNumShapeshiftForms and GetShapeshiftFormInfo and GetBindingKey) then return end
+    if not (api.GetNumShapeshiftForms and api.GetShapeshiftFormInfo and api.GetBindingKey) then return end
 
-    for index = 1, tonumber(Clean(GetNumShapeshiftForms())) or 0 do
-        local _, _, _, spellID = GetShapeshiftFormInfo(index)
-        local key1, key2 = GetBindingKey("SHAPESHIFTBUTTON" .. index)
+    for index = 1, tonumber(Clean(api.GetNumShapeshiftForms())) or 0 do
+        local _, _, _, spellID = api.GetShapeshiftFormInfo(index)
+        local key1, key2 = api.GetBindingKey("SHAPESHIFTBUTTON" .. index)
         AddKeys("spell", tonumber(Clean(spellID)), key1, key2)
     end
 end
 
--- Direkt belegte Makros ("MACRO <Name>")
+-- Direkt belegte Makros ("MACRO <Name>"), auch ohne Zauber oder Item
 local function ScanMacros()
-    if not (GetNumMacros and GetMacroInfo and GetBindingKey) then return end
+    if not (api.GetNumMacros and api.GetMacroInfo and api.GetBindingKey) then return end
 
-    local numAccount, numCharacter = GetNumMacros()
+    local numAccount, numCharacter = api.GetNumMacros()
 
     local ids = {}
     for id = 1, tonumber(numAccount) or 0 do tinsert(ids, id) end
     for id = 1, tonumber(numCharacter) or 0 do tinsert(ids, ACCOUNT_MACRO_COUNT + id) end
 
     for _, macroID in ipairs(ids) do
-        local spellID, itemID = MacroSpellID(macroID), MacroItemID(macroID)
-        local name = (spellID or itemID) and Clean((GetMacroInfo(macroID)))
+        local name = Clean((api.GetMacroInfo(macroID)))
 
         if name then
-            local key1, key2 = GetBindingKey("MACRO " .. name)
-            AddKeys("spell", spellID, key1, key2)
-            AddKeys("item", itemID, key1, key2)
+            local key1, key2 = api.GetBindingKey("MACRO " .. name)
+            if Clean(key1) or Clean(key2) then
+                AddKeys("spell", MacroSpellID(macroID), key1, key2)
+                AddKeys("item", MacroItemID(macroID), key1, key2)
+                AddKeys("macro", macroID, key1, key2)
+            end
         end
     end
 end
 
 -- Klick-Zauber, nur Einträge vom Typ Spell
 local function ScanClickCasting()
-    if not (C_ClickBindings and C_ClickBindings.GetProfileInfo) then return end
+    if not api.GetClickBindings then return end
 
-    local profile = C_ClickBindings.GetProfileInfo()
+    local profile = api.GetClickBindings()
     if not profile then return end
 
     local spellType = Enum and Enum.ClickBindingType and Enum.ClickBindingType.Spell or 1
@@ -98,7 +99,18 @@ function KT:RefreshBindings()
         ScanMacros()
         ScanClickCasting()
     end)
-    if not ok then geterrorhandler()(err) end
+    if not ok then
+        self.debug:Error("scan", "%s", tostring(err))
+        return
+    end
 
-    self:Debug("Belegungen aktualisiert")
+    self.debug:Log("scan", "bindings refreshed: %d", self:CountBindings())
+end
+
+function KT:CountBindings()
+    local count = 0
+    for _, byID in pairs(self.bindings) do
+        for _ in pairs(byID) do count = count + 1 end
+    end
+    return count
 end

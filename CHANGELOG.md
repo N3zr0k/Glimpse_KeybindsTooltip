@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+## [0.3.0] - 2026-10-08
+
+### Changed
+- Requires Glimpse 0.3
+- Faster scan: only action bar bindings are read, changes in combat wait until the fight ends (except page and form changes)
+
+### Added
+- Macros bound directly to a key show it in their tooltip, also without spell or item
+
 ## [0.2.4] - 2026-10-08
 
 ### Changed

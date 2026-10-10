@@ -4,14 +4,14 @@
 
 <p align="center">
   <a href="https://github.com/N3zr0k/Glimpse_KeybindsTooltip/releases"><img src="https://img.shields.io/github/v/release/N3zr0k/Glimpse_KeybindsTooltip?include_prereleases&sort=date&label=latest" alt="latest"></a>
-  <a href="https://github.com/N3zr0k/Glimpse_KeybindsTooltip/releases"><img src="https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fgithub.com%2FN3zr0k%2FGlimpse_KeybindsTooltip%2Freleases.atom&search=%2F%28release%29s%2Ftag%2Fv%5B0-9.%5D%2B%22%7C%2Freleases%2Ftag%2Fv%5B0-9.%5D%2B-%28alpha%7Cbeta%29&replace=%241%242&label=status&color=blue" alt="status"></a>
+  <a href="https://github.com/N3zr0k/Glimpse_KeybindsTooltip/releases"><img src="https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fgithub.com%2FN3zr0k%2FGlimpse_KeybindsTooltip%2Freleases.atom&search=%2F%28release%29s%2Ftag%2Fv%5B0-9.%5D%2B%22%7C%2Freleases%2Ftag%2Fv%5B0-9.%5D%2B-%28alpha%7Cbeta%7Clatest%29&replace=%241%242&label=status&color=blue" alt="status"></a>
   <a href="https://github.com/N3zr0k/Glimpse_KeybindsTooltip/commits/main"><img src="https://img.shields.io/github/last-commit/N3zr0k/Glimpse_KeybindsTooltip/main?label=last%20push" alt="last push"></a>
   <a href="https://github.com/N3zr0k/Glimpse_KeybindsTooltip/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/N3zr0k/Glimpse_KeybindsTooltip/ci.yml?branch=main&label=CI" alt="CI"></a>
 </p>
 
 Shows the keyboard, mouse and click-cast bindings of spells, items and macros in their tooltips.
 
-Requires [Glimpse](https://github.com/N3zr0k/Glimpse) 0.2.2 or newer. For WoW Forever (interface 16001).
+Requires [Glimpse](https://github.com/N3zr0k/Glimpse) 0.3.0 or newer. For WoW Forever (interface 16001).
 
 ## Contents
 
@@ -51,6 +51,10 @@ Open them with `/gli config`, then Glimpse > KeybindsTooltip. Settings follow th
 | --- | --- |
 | `/gli keybinds refresh` | Reads the bindings again |
 | `/gli keybinds list` | Prints all stored bindings, the action bar page and bonus bar offset (troubleshooting) |
+| `/gli probe keybinds list` | The same as a Glimpse probe, also written to the debug log (`/gli debug log`) |
+
+Debug output uses the Glimpse debugger with the categories `scan` and `tooltip` (`/gli debug KeybindsTooltip scan on`).
+`/gli probe db sources` lists KeybindsTooltip as reading bindings live; it stores no data.
 
 ## Installation
 
@@ -64,6 +68,7 @@ The addon lives in the folder `Glimpse_KeybindsTooltip/` of the repository; link
 (junction) and `/reload` after each change. Checks:
 
 ```
+lua tests/run.lua          # logic tests without WoW (Blizzard functions are replaced through KT.api)
 luacheck .
 python3 tools/check.py
 ```

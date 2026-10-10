@@ -2,6 +2,7 @@ local ADDON_NAME = ...
 local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 local L = KT.L
+local api = KT.api
 
 -- Nur der Inhalt, Anhängen/Trennlinie/Icons/Secrets macht Glimpse (RegisterTooltipLine):
 --
@@ -76,7 +77,7 @@ function KT:RegisterTooltips()
                 return module:BuildLines(kind, data.id)
             end)
         else
-            self:Debug("Tooltip-Typ nicht vorhanden:", typeName)
+            self.debug:Log("tooltip", "tooltip type not available: %s", typeName)
         end
     end
 end
@@ -86,7 +87,7 @@ local TOOLTIPS = { "GameTooltip", "ItemRefTooltip", "ShoppingTooltip1", "Shoppin
 -- Sichtbare Tooltips neu aufbauen, z. B. nach Optionsänderung
 function KT:RefreshTooltips()
     for _, name in ipairs(TOOLTIPS) do
-        local tooltip = _G[name]
+        local tooltip = api.GetFrame(name)
 
         if tooltip and tooltip:IsShown() then
             if tooltip.RefreshData then

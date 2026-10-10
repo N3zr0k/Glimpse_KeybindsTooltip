@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <!-- Reihenfolge ist wichtig: Util -> Format/Slots -> Scan -->
-    <Script file="Util.lua"/>
-    <Script file="Format.lua"/>
-    <Script file="Slots.lua"/>
+    <!-- Reihenfolge ist wichtig: ScanUtil -> ScanFormat/ScanSlots -> Scan -->
+    <Script file="ScanUtil.lua"/>
+    <Script file="ScanFormat.lua"/>
+    <Script file="ScanSlots.lua"/>
     <Script file="Scan.lua"/>
 </Ui>

@@ -3,13 +3,13 @@
 ## Notes: Shows keyboard, mouse and click-cast bindings in spell, item and macro tooltips.
 ## Notes-deDE: Zeigt Tastatur-, Maus- und Klick-Zauber-Belegungen in Tooltips von Zaubern, Gegenständen und Makros.
 ## Author: N3zr0k
-## Version: 0.2.4-beta.3
+## Version: 0.3.2-alpha.1
 ## X-License: MIT
 ## X-Website: https://github.com/N3zr0k/Glimpse_KeybindsTooltip
 ## X-Repo: https://github.com/N3zr0k/Glimpse_KeybindsTooltip
 ## X-Curse-Project-ID: 1730180
 
-## X-Glimpse-MinVersion: 0.2.2
+## X-Glimpse-MinVersion: 0.3.0
 ## Dependencies: Glimpse
 ## Category: Tooltip
 ## IconTexture: Interface\AddOns\Glimpse_KeybindsTooltip\Media\Icon

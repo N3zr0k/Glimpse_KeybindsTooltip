@@ -2,6 +2,7 @@ local Glimpse = LibStub("AceAddon-3.0"):GetAddon("Glimpse")
 local KT = Glimpse:GetModule("KeybindsTooltip")
 local U = KT.util
 local L = KT.L
+local api = KT.api
 
 local Clean, AddUnique, GetEntry = U.Clean, U.AddUnique, U.GetEntry
 
@@ -59,8 +60,8 @@ local function FormatKeyboard(key)
 
     -- Nur die Taste übersetzen lassen, das 3. Argument von GetBindingText wirkt je nach Client anders
     local text = base
-    if GetBindingText then
-        local localized = GetBindingText(base, "KEY_", false)
+    if api.GetBindingText then
+        local localized = api.GetBindingText(base, "KEY_", false)
         if localized and localized ~= "" then text = localized end
     end
 
@@ -103,8 +104,8 @@ local function FormatClickCast(binding)
     local set = {}
     local raw = binding.modifiers or 0
 
-    if C_ClickBindings and C_ClickBindings.GetStringFromModifiers then
-        local text = C_ClickBindings.GetStringFromModifiers(raw) or ""
+    if api.GetClickModifiers then
+        local text = api.GetClickModifiers(raw) or ""
         for part in string.gmatch(text, "[^%-]+") do
             local normalized = NormalizeModifier(part)
             if normalized then set[normalized] = true end
@@ -144,3 +145,4 @@ local function AddKeys(kind, id, key1, key2)
 end
 
 U.AddKeys, U.FormatClickCast = AddKeys, FormatClickCast
+U.FormatKeyboard, U.FormatMouse = FormatKeyboard, FormatMouse
